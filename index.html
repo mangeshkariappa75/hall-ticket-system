@@ -3,1085 +3,1096 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hall Ticket Distribution System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Hall Ticket Issuance System</title>
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
+            --primary: #3498db;
+            --secondary: #2c3e50;
             --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
         }
         
-        body {
-            background-color: #f8f9fa;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        .navbar {
-            background-color: var(--primary);
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
         }
         
-        .sidebar {
-            background-color: var(--dark);
-            color: white;
-            height: calc(100vh - 56px);
-            position: fixed;
-            padding-top: 20px;
-            width: 250px;
-        }
-        
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 12px 20px;
-            margin: 4px 0;
-            border-radius: 4px;
-        }
-        
-        .sidebar .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        
-        .sidebar .nav-link.active {
-            background-color: var(--secondary);
-            color: white;
-        }
-        
-        .main-content {
-            margin-left: 250px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
         }
         
-        .card {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            border: none;
-            border-radius: 8px;
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
-        .card-header {
-            background-color: var(--primary);
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
             color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
             font-weight: 600;
         }
         
-        .btn-primary {
-            background-color: var(--secondary);
-            border-color: var(--secondary);
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
         }
         
         .btn-success {
-            background-color: var(--success);
-            border-color: var(--success);
+            background: var(--success);
         }
         
-        .stat-card {
-            text-align: center;
-            padding: 20px;
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #d35400;
+        }
+        
+        .card {
+            background: white;
             border-radius: 8px;
-            color: white;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .stat-card i {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
         }
         
-        .bg-primary { background-color: var(--primary); }
-        .bg-secondary { background-color: var(--secondary); }
-        .bg-success { background-color: var(--success); }
-        .bg-accent { background-color: var(--accent); }
+        .status-active {
+            background: var(--success);
+        }
+        
+        .status-inactive {
+            background: var(--danger);
+        }
+        
+        .tab-container {
+            margin-top: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
         
         .login-container {
             max-width: 400px;
             margin: 100px auto;
-            padding: 20px;
+            padding: 30px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
-        .section {
+        .hidden {
             display: none;
         }
         
-        .section.active {
-            display: block;
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
         }
         
-        .table-responsive {
-            border-radius: 8px;
-            overflow: hidden;
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
         
-        .table th {
-            background-color: var(--primary);
-            color: white;
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
         
-        .highlight {
-            background-color: #fff8e1;
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
         }
         
-        .subject-checkbox {
-            margin-right: 8px;
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
         
-        .settings-panel {
-            background-color: #f8f9fa;
-            border-radius: 8px;
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: white;
             padding: 20px;
-            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            color: #666;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-ticket-alt me-2"></i>
-                Hail Ticket Distribution System
-            </a>
-            <div class="d-flex align-items-center text-white">
-                <span class="me-3" id="userRoleDisplay">Admin User</span>
-                <button class="btn btn-outline-light btn-sm" onclick="logout()">
-                    <i class="fas fa-sign-out-alt me-1"></i> Logout
-                </button>
-            </div>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Hall Ticket System</div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="nav-dashboard">Dashboard</a></li>
+                    <li><a href="#" id="nav-settings">Settings</a></li>
+                    <li><a href="#" id="nav-status">Student Status</a></li>
+                    <li><a href="#" id="nav-logout">Logout</a></li>
+                </ul>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <!-- Main Container -->
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar d-none d-md-block">
-                <nav class="nav flex-column">
-                    <a class="nav-link active" href="#" data-section="dashboard">
-                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                    </a>
-                    <a class="nav-link" href="#" data-section="master-sheet">
-                        <i class="fas fa-table me-2"></i> Master Sheet
-                    </a>
-                    <a class="nav-link" href="#" data-section="faculty-management">
-                        <i class="fas fa-chalkboard-teacher me-2"></i> Faculty Management
-                    </a>
-                    <a class="nav-link" href="#" data-section="subject-assignment">
-                        <i class="fas fa-tasks me-2"></i> Subject Assignment
-                    </a>
-                    <a class="nav-link" href="#" data-section="ticket-issuance">
-                        <i class="fas fa-ticket-alt me-2"></i> Ticket Issuance
-                    </a>
-                    <a class="nav-link" href="#" data-section="email-settings">
-                        <i class="fas fa-envelope me-2"></i> Email Settings
-                    </a>
-                    <a class="nav-link" href="#" data-section="admin-settings">
-                        <i class="fas fa-cog me-2"></i> Admin Settings
-                    </a>
-                </nav>
+    <div class="container">
+        <!-- Login Section -->
+        <div id="login-section" class="login-container">
+            <h2>Admin Login</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter username">
             </div>
-
-            <!-- Main Content -->
-            <div class="col-md-10 main-content">
-                <!-- API Status -->
-                <div id="apiStatus" class="alert alert-info" style="display: none;"></div>
-
-                <!-- Dashboard Section -->
-                <div id="dashboard" class="section active">
-                    <h2 class="mb-4">Dashboard</h2>
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <div class="stat-card bg-primary">
-                                <i class="fas fa-users"></i>
-                                <h3 id="totalFaculty">0</h3>
-                                <p>Total Faculty</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stat-card bg-success">
-                                <i class="fas fa-ticket-alt"></i>
-                                <h3 id="totalTickets">0</h3>
-                                <p>Tickets Issued</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stat-card bg-secondary">
-                                <i class="fas fa-envelope"></i>
-                                <h3 id="totalEmails">0</h3>
-                                <p>Emails Sent</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stat-card bg-accent">
-                                <i class="fas fa-clipboard-list"></i>
-                                <h3 id="pendingClearance">0</h3>
-                                <p>Pending Clearances</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">Recent Activity</div>
-                                <div class="card-body">
-                                    <ul class="list-group list-group-flush" id="recentActivities">
-                                        <li class="list-group-item">
-                                            <i class="fas fa-info-circle text-primary me-2"></i>
-                                            System initialized. Connect to your Google Sheets.
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">Department-wise Status</div>
-                                <div class="card-body">
-                                    <canvas id="deptChart" height="250"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Master Sheet Section -->
-                <div id="master-sheet" class="section">
-                    <h2 class="mb-4">Master Sheet Management</h2>
-                    <div class="card">
-                        <div class="card-header">Google Sheet Integration</div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-8">
-                                    <label class="form-label">Google Sheet URL</label>
-                                    <input type="url" class="form-control" id="masterSheetUrl" placeholder="Paste Master Sheet URL">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Update Frequency</label>
-                                    <select class="form-select" id="updateFrequency">
-                                        <option value="10" selected>Every 10 minutes</option>
-                                        <option value="30">Every 30 minutes</option>
-                                        <option value="60">Every hour</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" onclick="updateMasterSheet()">
-                                <i class="fas fa-sync-alt me-2"></i> Update Now
-                            </button>
-                            <button class="btn btn-success ms-2" onclick="exportToCSV()">
-                                <i class="fas fa-download me-2"></i> Download CSV
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">Master Sheet Data</div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>PRN</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Department</th>
-                                            <th>Year</th>
-                                            <th>Clearance</th>
-                                            <th>Hail Ticket</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="masterSheetTable">
-                                        <tr>
-                                            <td colspan="7" class="text-center">No data available. Please connect to Google Sheets.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Faculty Management Section -->
-                <div id="faculty-management" class="section">
-                    <h2 class="mb-4">Faculty Management</h2>
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="card">
-                                <div class="card-header">Add Faculty</div>
-                                <div class="card-body">
-                                    <form id="addFacultyForm">
-                                        <div class="mb-3">
-                                            <label class="form-label">Department</label>
-                                            <select class="form-select" id="facultyDept" required>
-                                                <option value="">Select Department</option>
-                                                <option value="CSE">Computer Science</option>
-                                                <option value="ECE">Electronics</option>
-                                                <option value="ME">Mechanical</option>
-                                                <option value="CE">Civil</option>
-                                                <option value="EE">Electrical</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="facultyName" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Designation</label>
-                                            <select class="form-select" id="facultyDesignation" required>
-                                                <option value="Faculty">Faculty</option>
-                                                <option value="HOD">HOD</option>
-                                                <option value="Administrator">Administrator</option>
-                                                <option value="Admin">Admin</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="facultyEmail" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Add Faculty</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="card">
-                                <div class="card-header">Faculty List</div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Department</th>
-                                                    <th>Designation</th>
-                                                    <th>Email</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="facultyTable">
-                                                <tr>
-                                                    <td colspan="5" class="text-center">No faculty members added yet</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Subject Assignment Section -->
-                <div id="subject-assignment" class="section">
-                    <h2 class="mb-4">Subject Assignment</h2>
-                    <div class="card">
-                        <div class="card-header">Extract Subjects from Master Sheet</div>
-                        <div class="card-body">
-                            <p>Scan the master sheet to extract all subjects and assign them to faculty members.</p>
-                            <button class="btn btn-primary" onclick="extractSubjects()">
-                                <i class="fas fa-search me-2"></i> Extract Subjects
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">Assign Subjects to Faculty</div>
-                        <div class="card-body">
-                            <div id="subjectAssignmentUI" style="display: none;">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Select Department</label>
-                                        <select class="form-select" id="subjectDept">
-                                            <option value="">Select Department</option>
-                                            <option value="CSE">Computer Science</option>
-                                            <option value="ECE">Electronics</option>
-                                            <option value="ME">Mechanical</option>
-                                            <option value="CE">Civil</option>
-                                            <option value="EE">Electrical</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Select Faculty</label>
-                                        <select class="form-select" id="subjectFaculty">
-                                            <option value="">Select Faculty</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div id="subjectsList" class="mb-3">
-                                    <!-- Subjects will be listed here -->
-                                </div>
-                                <button class="btn btn-success" onclick="assignSubjects()">
-                                    <i class="fas fa-check-circle me-2"></i> Assign Subjects
-                                </button>
-                            </div>
-                            <div id="noSubjectsMessage">
-                                <p class="text-muted">No subjects extracted yet. Click "Extract Subjects" to begin.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Ticket Issuance Section -->
-                <div id="ticket-issuance" class="section">
-                    <h2 class="mb-4">Ticket Issuance</h2>
-                    <div class="settings-panel">
-                        <h5>Drive Folder Configuration</h5>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Department</label>
-                                <select class="form-select" id="ticketDept">
-                                    <option value="">Select Department</option>
-                                    <option value="CSE">Computer Science</option>
-                                    <option value="ECE">Electronics</option>
-                                    <option value="ME">Mechanical</option>
-                                    <option value="CE">Civil</option>
-                                    <option value="EE">Electrical</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Drive Folder ID</label>
-                                <input type="text" class="form-control" id="driveFolderId" placeholder="Enter Drive Folder ID">
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" onclick="saveDriveConfig()">
-                            <i class="fas fa-save me-2"></i> Save Configuration
-                        </button>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">Issue Hall Tickets</div>
-                        <div class="card-body">
-                            <p>Issue hall tickets to students with clearance status "Cleared" and ticket status "Not Issued".</p>
-                            <div class="mb-3">
-                                <label class="form-label">Select Department</label>
-                                <select class="form-select" id="issueDept">
-                                    <option value="">Select Department</option>
-                                    <option value="CSE">Computer Science</option>
-                                    <option value="ECE">Electronics</option>
-                                    <option value="ME">Mechanical</option>
-                                    <option value="CE">Civil</option>
-                                    <option value="EE">Electrical</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-success" onclick="issueTickets()">
-                                <i class="fas fa-paper-plane me-2"></i> Issue Tickets
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">Issuance Log</div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Department</th>
-                                            <th>Tickets Issued</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="issuanceLogTable">
-                                        <tr>
-                                            <td colspan="4" class="text-center">No issuance records yet</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Email Settings Section -->
-                <div id="email-settings" class="section">
-                    <h2 class="mb-4">Email Settings</h2>
-                    <div class="card">
-                        <div class="card-header">Email Configuration</div>
-                        <div class="card-body">
-                            <form id="emailSettingsForm">
-                                <div class="mb-3">
-                                    <label class="form-label">Sender Email</label>
-                                    <input type="email" class="form-control" id="senderEmail" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Email Subject</label>
-                                    <input type="text" class="form-control" id="emailSubject" value="Hall Ticket Assignment" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Email Template</label>
-                                    <textarea class="form-control" id="emailTemplate" rows="5" required>Dear {name},\n\nYour hall ticket for {subject} is attached.\n\nBest regards,\nExam Department</textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Save Settings</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Admin Settings Section -->
-                <div id="admin-settings" class="section">
-                    <h2 class="mb-4">Admin Settings</h2>
-                    <div class="card">
-                        <div class="card-header">System Configuration</div>
-                        <div class="card-body">
-                            <form id="adminSettingsForm">
-                                <div class="mb-3">
-                                    <label class="form-label">Google API Key</label>
-                                    <input type="text" class="form-control" id="googleApiKey" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Google Sheet ID</label>
-                                    <input type="text" class="form-control" id="googleSheetId" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Auto-Update Interval (minutes)</label>
-                                    <input type="number" class="form-control" id="autoUpdateInterval" value="10" min="5" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Save Configuration</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password">
             </div>
+            <button id="login-btn">Login</button>
+            <div id="login-error" class="alert alert-error hidden">Invalid credentials</div>
         </div>
-    </div>
 
-    <!-- Login Modal -->
-    <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Admin Login</h5>
-                </div>
-                <div class="modal-body">
-                    <form id="loginForm">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" value="admin" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" value="admin@2003" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="userRole" class="form-label">Role</label>
-                            <select class="form-select" id="userRole" required>
-                                <option value="Admin">Admin</option>
-                                <option value="Administrator">Administrator</option>
-                                <option value="HOD">HOD</option>
-                                <option value="Faculty">Faculty</option>
-                            </select>
-                        </div>
-                    </form>
-                    <div class="alert alert-info">
-                        <small>Default admin credentials: admin / admin@2003</small>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="login()">Login</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Global variables
-        let apiKey = "";
-        let sheetId = "";
-        let userRole = "";
-        let masterData = [];
-        let facultyData = [];
-        let subjectsData = [];
-        let driveConfig = {};
-        let emailConfig = {};
-        
-        // Show login modal on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-            loginModal.show();
-        });
-
-        // Login function
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            userRole = document.getElementById('userRole').value;
-            
-            if (username === 'admin' && password === 'admin@2003') {
-                var loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                loginModal.hide();
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="hidden">
+            <div class="section">
+                <h2>Dashboard</h2>
                 
-                document.getElementById('userRoleDisplay').textContent = userRole;
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Students</div>
+                        <div class="stat-value" id="total-students">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Cleared Students</div>
+                        <div class="stat-value" id="cleared-students">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Hall Tickets Issued</div>
+                        <div class="stat-value" id="issued-tickets">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Pending Issuance</div>
+                        <div class="stat-value" id="pending-tickets">0</div>
+                    </div>
+                </div>
                 
-                // Load configuration if available
-                loadConfig();
-            } else {
-                alert('Invalid credentials. Please try again.');
-            }
-        }
-
-        // Logout function
-        function logout() {
-            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-            loginModal.show();
-        }
-
-        // Load configuration from localStorage
-        function loadConfig() {
-            const config = JSON.parse(localStorage.getItem('hailTicketConfig')) || {};
-            
-            if (config.apiKey) {
-                apiKey = config.apiKey;
-                document.getElementById('googleApiKey').value = apiKey;
-            }
-            
-            if (config.sheetId) {
-                sheetId = config.sheetId;
-                document.getElementById('googleSheetId').value = sheetId;
-            }
-            
-            if (config.driveConfig) {
-                driveConfig = config.driveConfig;
-            }
-            
-            if (config.emailConfig) {
-                emailConfig = config.emailConfig;
-                document.getElementById('senderEmail').value = emailConfig.sender || '';
-                document.getElementById('emailSubject').value = emailConfig.subject || 'Hall Ticket Assignment';
-                document.getElementById('emailTemplate').value = emailConfig.template || '';
-            }
-            
-            if (config.autoUpdateInterval) {
-                document.getElementById('autoUpdateInterval').value = config.autoUpdateInterval;
-            }
-            
-            if (apiKey && sheetId) {
-                fetchSheetData('Master_Sheet');
-                fetchSheetData('Faculty');
-                showApiStatus('Configuration loaded successfully', 'success');
-            } else {
-                showApiStatus('Please configure API key and Sheet ID in Admin Settings', 'info');
-            }
-        }
-
-        // Save configuration to localStorage
-        function saveConfig() {
-            const config = {
-                apiKey: document.getElementById('googleApiKey').value,
-                sheetId: document.getElementById('googleSheetId').value,
-                driveConfig: driveConfig,
-                emailConfig: {
-                    sender: document.getElementById('senderEmail').value,
-                    subject: document.getElementById('emailSubject').value,
-                    template: document.getElementById('emailTemplate').value
-                },
-                autoUpdateInterval: document.getElementById('autoUpdateInterval').value
-            };
-            
-            localStorage.setItem('hailTicketConfig', JSON.stringify(config));
-            apiKey = config.apiKey;
-            sheetId = config.sheetId;
-            emailConfig = config.emailConfig;
-            
-            showApiStatus('Configuration saved successfully', 'success');
-            return true;
-        }
-
-        // Show API status message
-        function showApiStatus(message, type) {
-            const statusEl = document.getElementById('apiStatus');
-            statusEl.textContent = message;
-            statusEl.className = `alert alert-${type}`;
-            statusEl.style.display = 'block';
-            
-            setTimeout(() => {
-                statusEl.style.display = 'none';
-            }, 3000);
-        }
-
-        // Fetch data from Google Sheets
-        function fetchSheetData(sheetName) {
-            if (!apiKey || !sheetId) {
-                showApiStatus('Please configure API key and Sheet ID first', 'error');
-                return;
-            }
-            
-            showApiStatus(`Loading data from ${sheetName}...`, 'info');
-            
-            fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.values && data.values.length > 1) {
-                        processSheetData(sheetName, data.values);
-                        showApiStatus(`${sheetName} data loaded successfully`, 'success');
-                    } else {
-                        showApiStatus(`No data found in ${sheetName}`, 'warning');
-                    }
-                })
-                .catch(error => {
-                    showApiStatus(`Error loading ${sheetName}: ${error.message}`, 'error');
-                });
-        }
-
-        // Process sheet data
-        function processSheetData(sheetName, data) {
-            const headers = data[0];
-            const rows = data.slice(1);
-            
-            switch(sheetName) {
-                case 'Master_Sheet':
-                    masterData = rows.map(row => {
-                        let obj = {};
-                        headers.forEach((header, i) => {
-                            obj[header] = row[i] || '';
-                        });
-                        return obj;
-                    });
-                    updateMasterSheetTable();
-                    updateDashboardStats();
-                    break;
-                    
-                case 'Faculty':
-                    facultyData = rows.map(row => {
-                        let obj = {};
-                        headers.forEach((header, i) => {
-                            obj[header] = row[i] || '';
-                        });
-                        return obj;
-                    });
-                    updateFacultyTable();
-                    break;
-            }
-        }
-
-        // Update master sheet table
-        function updateMasterSheetTable() {
-            const table = document.getElementById('masterSheetTable');
-            
-            if (masterData.length === 0) {
-                table.innerHTML = '<tr><td colspan="7" class="text-center">No data available</td></tr>';
-                return;
-            }
-            
-            let html = '';
-            masterData.forEach(student => {
-                html += `
-                    <tr class="${student.Clearance_Status === 'Cleared' ? 'highlight' : ''}">
-                        <td>${student.PRN || ''}</td>
-                        <td>${student.Name || ''}</td>
-                        <td>${student.Email || ''}</td>
-                        <td>${student.Department || ''}</td>
-                        <td>${student.Year || ''}</td>
-                        <td>
-                            <span class="badge ${student.Clearance_Status === 'Cleared' ? 'bg-success' : 'bg-warning'}">
-                                ${student.Clearance_Status || 'Not Cleared'}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge ${student.Hail_Ticket_Status === 'Issued' ? 'bg-success' : 'bg-secondary'}">
-                                ${student.Hail_Ticket_Status || 'Not Issued'}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            table.innerHTML = html;
-        }
-
-        // Update faculty table
-        function updateFacultyTable() {
-            const table = document.getElementById('facultyTable');
-            
-            if (facultyData.length === 0) {
-                table.innerHTML = '<tr><td colspan="5" class="text-center">No faculty members found</td></tr>';
-                return;
-            }
-            
-            let html = '';
-            facultyData.forEach(faculty => {
-                html += `
-                    <tr>
-                        <td>${faculty.Name || ''}</td>
-                        <td>${faculty.Department || ''}</td>
-                        <td>${faculty.Designation || ''}</td>
-                        <td>${faculty.Email || ''}</td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            table.innerHTML = html;
-        }
-
-        // Update dashboard statistics
-        function updateDashboardStats() {
-            document.getElementById('totalFaculty').textContent = facultyData.length;
-            
-            const totalTickets = masterData.length;
-            const issuedTickets = masterData.filter(row => row.Hail_Ticket_Status === 'Issued').length;
-            const pendingClearance = masterData.filter(row => row.Clearance_Status !== 'Cleared').length;
-            
-            document.getElementById('totalTickets').textContent = totalTickets;
-            document.getElementById('issuedTickets').textContent = issuedTickets;
-            document.getElementById('pendingClearance').textContent = pendingClearance;
-            
-            // Add a sample activity
-            const activitiesList = document.getElementById('recentActivities');
-            activitiesList.innerHTML = `
-                <li class="list-group-item">
-                    <i class="fas fa-sync-alt text-primary me-2"></i>
-                    Master sheet updated with ${masterData.length} records
-                    <span class="text-muted float-end">Just now</span>
-                </li>
-            `;
-            
-            // Update chart
-            updateDepartmentChart();
-        }
-
-        // Update department chart
-        function updateDepartmentChart() {
-            const ctx = document.getElementById('deptChart').getContext('2d');
-            
-            // Count students by department
-            const deptCounts = {};
-            masterData.forEach(student => {
-                if (student.Department) {
-                    deptCounts[student.Department] = (deptCounts[student.Department] || 0) + 1;
-                }
-            });
-            
-            const departments = Object.keys(deptCounts);
-            const counts = Object.values(deptCounts);
-            
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: departments,
-                    datasets: [{
-                        label: 'Students by Department',
-                        data: counts,
-                        backgroundColor: ['#4361ee', '#3f37c9', '#4cc9f0', '#e74c3c', '#2ecc71']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        // Extract subjects from master sheet
-        function extractSubjects() {
-            if (masterData.length === 0) {
-                showApiStatus('Please load master sheet data first', 'error');
-                return;
-            }
-            
-            // Extract unique subjects from master data
-            subjectsData = [];
-            masterData.forEach(student => {
-                for (let key in student) {
-                    if (key.startsWith('Subject') && student[key]) {
-                        if (!subjectsData.includes(student[key])) {
-                            subjectsData.push(student[key]);
-                        }
-                    }
-                }
-            });
-            
-            if (subjectsData.length === 0) {
-                showApiStatus('No subjects found in master sheet', 'warning');
-                return;
-            }
-            
-            // Display subjects for assignment
-            const subjectsList = document.getElementById('subjectsList');
-            let html = '<h6>Select Subjects to Assign:</h6>';
-            
-            subjectsData.forEach(subject => {
-                html += `
-                    <div class="form-check">
-                        <input class="form-check-input subject-checkbox" type="checkbox" value="${subject}" id="subject-${subject}">
-                        <label class="form-check-label" for="subject-${subject}">
-                            ${subject}
+                <div class="card">
+                    <h3>Automation Control</h3>
+                    <p>Automatically issue hall tickets to cleared students every 10 minutes</p>
+                    <div class="form-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="automation-toggle">
+                            <span class="slider"></span>
                         </label>
+                        <span id="automation-status">Status: Inactive</span>
                     </div>
-                `;
-            });
-            
-            subjectsList.innerHTML = html;
-            document.getElementById('subjectAssignmentUI').style.display = 'block';
-            document.getElementById('noSubjectsMessage').style.display = 'none';
-            
-            showApiStatus(`Extracted ${subjectsData.length} subjects from master sheet`, 'success');
-        }
+                    <button id="manual-process" class="btn-success">Process Now</button>
+                </div>
+                
+                <div class="card">
+                    <h3>Recent Activity</h3>
+                    <div id="activity-log">
+                        <p>No recent activity</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        // Assign subjects to faculty
-        function assignSubjects() {
-            const department = document.getElementById('subjectDept').value;
-            const facultyEmail = document.getElementById('subjectFaculty').value;
-            const selectedSubjects = [];
-            
-            document.querySelectorAll('.subject-checkbox:checked').forEach(checkbox => {
-                selectedSubjects.push(checkbox.value);
-            });
-            
-            if (!department || !facultyEmail || selectedSubjects.length === 0) {
-                showApiStatus('Please select department, faculty, and at least one subject', 'error');
-                return;
+        <!-- Settings Section -->
+        <div id="settings-section" class="hidden">
+            <div class="section">
+                <h2>Settings</h2>
+                
+                <div class="tab-container">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="google-sheets">Google Sheets</div>
+                        <div class="tab" data-tab="google-drive">Google Drive</div>
+                        <div class="tab" data-tab="gmail">Gmail</div>
+                        <div class="tab" data-tab="departments">Departments</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="google-sheets-tab">
+                        <h3>Google Sheets Configuration</h3>
+                        <p>Connect to your Google Sheet containing student data</p>
+                        <div class="form-group">
+                            <label for="sheet-url">Sheet URL</label>
+                            <input type="text" id="sheet-url" placeholder="Paste Google Sheet URL here">
+                        </div>
+                        <div class="form-group">
+                            <label for="sheet-id">Sheet ID</label>
+                            <input type="text" id="sheet-id" placeholder="Enter Sheet ID">
+                        </div>
+                        <button id="connect-sheets">Connect to Sheets</button>
+                        <div id="sheets-status" class="alert hidden"></div>
+                    </div>
+                    
+                    <div class="tab-content" id="google-drive-tab">
+                        <h3>Google Drive Configuration</h3>
+                        <p>Connect to your Google Drive folder containing hall tickets</p>
+                        <div class="form-group">
+                            <label for="drive-folder">Drive Folder ID</label>
+                            <input type="text" id="drive-folder" placeholder="Enter Drive Folder ID">
+                        </div>
+                        <button id="connect-drive">Connect to Drive</button>
+                        <div id="drive-status" class="alert hidden"></div>
+                    </div>
+                    
+                    <div class="tab-content" id="gmail-tab">
+                        <h3>Gmail Configuration</h3>
+                        <p>Configure email settings for sending hall tickets</p>
+                        <div class="form-group">
+                            <label for="admin-email">Admin Email</label>
+                            <input type="email" id="admin-email" placeholder="Enter admin email">
+                        </div>
+                        <div class="form-group">
+                            <label for="email-subject">Email Subject</label>
+                            <input type="text" id="email-subject" placeholder="Enter email subject" value="Hall Ticket Issuance">
+                        </div>
+                        <div class="form-group">
+                            <label for="email-body">Email Body</label>
+                            <textarea id="email-body" rows="5" placeholder="Enter email body">Dear Student, Your hall ticket is attached. Please find it attached to this email.</textarea>
+                        </div>
+                        <button id="save-email">Save Email Settings</button>
+                        <div id="email-status" class="alert hidden"></div>
+                    </div>
+                    
+                    <div class="tab-content" id="departments-tab">
+                        <h3>Department Configuration</h3>
+                        <p>Add and manage departments</p>
+                        <div class="form-group">
+                            <label for="dept-name">Department Name</label>
+                            <input type="text" id="dept-name" placeholder="Enter department name">
+                        </div>
+                        <div class="form-group">
+                            <label for="dept-sheet">Department Sheet URL</label>
+                            <input type="text" id="dept-sheet" placeholder="Enter department sheet URL">
+                        </div>
+                        <button id="add-dept">Add Department</button>
+                        
+                        <h4>Existing Departments</h4>
+                        <table id="dept-table">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Sheet URL</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Departments will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Status Section -->
+        <div id="status-section" class="hidden">
+            <div class="section">
+                <h2>Student Clearance Status</h2>
+                
+                <div class="form-group">
+                    <label for="search-prn">Search by PRN</label>
+                    <input type="text" id="search-prn" placeholder="Enter PRN number">
+                    <button id="search-btn">Search</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dept-filter">Filter by Department</label>
+                    <select id="dept-filter">
+                        <option value="all">All Departments</option>
+                        <!-- Departments will be populated here -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="year-filter">Filter by Year</label>
+                    <select id="year-filter">
+                        <option value="all">All Years</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+                </div>
+                
+                <table id="student-table">
+                    <thead>
+                        <tr>
+                            <th>PRN</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Year</th>
+                            <th>Clearance Status</th>
+                            <th>Hall Ticket Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Student data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Hall Ticket Issuance System &copy; 2023</p>
+        </div>
+    </footer>
+
+    <script>
+        // Application state
+        const state = {
+            isLoggedIn: false,
+            automationActive: false,
+            departments: [],
+            students: [],
+            settings: {
+                sheets: {},
+                drive: {},
+                email: {}
+            },
+            intervalId: null
+        };
+
+        // DOM Elements
+        const loginSection = document.getElementById('login-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const settingsSection = document.getElementById('settings-section');
+        const statusSection = document.getElementById('status-section');
+        
+        const loginBtn = document.getElementById('login-btn');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginError = document.getElementById('login-error');
+        
+        const navDashboard = document.getElementById('nav-dashboard');
+        const navSettings = document.getElementById('nav-settings');
+        const navStatus = document.getElementById('nav-status');
+        const navLogout = document.getElementById('nav-logout');
+        
+        const automationToggle = document.getElementById('automation-toggle');
+        const automationStatus = document.getElementById('automation-status');
+        const manualProcessBtn = document.getElementById('manual-process');
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const savedLogin = localStorage.getItem('isLoggedIn');
+            if (savedLogin === 'true') {
+                state.isLoggedIn = true;
+                showDashboard();
             }
             
-            // In a real implementation, this would update Google Sheets
-            showApiStatus(`Assigned ${selectedSubjects.length} subjects to faculty`, 'success');
+            // Load saved settings
+            loadSettings();
             
-            // Simulate email sending
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Initialize tabs
+            initTabs();
+        });
+        
+        function setupEventListeners() {
+            // Login functionality
+            loginBtn.addEventListener('click', handleLogin);
+            usernameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') handleLogin();
+            });
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') handleLogin();
+            });
+            
+            // Navigation
+            navDashboard.addEventListener('click', showDashboard);
+            navSettings.addEventListener('click', showSettings);
+            navStatus.addEventListener('click', showStatus);
+            navLogout.addEventListener('click', handleLogout);
+            
+            // Automation control
+            automationToggle.addEventListener('change', toggleAutomation);
+            manualProcessBtn.addEventListener('click', processHallTickets);
+            
+            // Settings tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Settings save buttons
+            document.getElementById('connect-sheets').addEventListener('click', saveSheetsSettings);
+            document.getElementById('connect-drive').addEventListener('click', saveDriveSettings);
+            document.getElementById('save-email').addEventListener('click', saveEmailSettings);
+            document.getElementById('add-dept').addEventListener('click', addDepartment);
+            
+            // Student status search
+            document.getElementById('search-btn').addEventListener('click', searchStudent);
+        }
+        
+        function initTabs() {
+            // Initialize department table
+            updateDepartmentTable();
+        }
+        
+        function handleLogin() {
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+            
+            // Hardcoded credentials for demo
+            if (username === 'admin@system.com' && password === 'admin@2003') {
+                state.isLoggedIn = true;
+                localStorage.setItem('isLoggedIn', 'true');
+                loginError.classList.add('hidden');
+                showDashboard();
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        }
+        
+        function handleLogout() {
+            state.isLoggedIn = false;
+            localStorage.removeItem('isLoggedIn');
+            stopAutomation();
+            loginSection.classList.remove('hidden');
+            dashboardSection.classList.add('hidden');
+            settingsSection.classList.add('hidden');
+            statusSection.classList.add('hidden');
+            
+            // Clear form fields
+            usernameInput.value = '';
+            passwordInput.value = '';
+        }
+        
+        function showDashboard() {
+            if (!state.isLoggedIn) return;
+            
+            loginSection.classList.add('hidden');
+            dashboardSection.classList.remove('hidden');
+            settingsSection.classList.add('hidden');
+            statusSection.classList.add('hidden');
+            
+            // Update dashboard stats
+            updateDashboardStats();
+        }
+        
+        function showSettings() {
+            if (!state.isLoggedIn) return;
+            
+            loginSection.classList.add('hidden');
+            dashboardSection.classList.add('hidden');
+            settingsSection.classList.remove('hidden');
+            statusSection.classList.add('hidden');
+            
+            // Load current settings into form fields
+            loadSettingsToForm();
+        }
+        
+        function showStatus() {
+            if (!state.isLoggedIn) return;
+            
+            loginSection.classList.add('hidden');
+            dashboardSection.classList.add('hidden');
+            settingsSection.classList.add('hidden');
+            statusSection.classList.remove('hidden');
+            
+            // Load student data
+            loadStudentData();
+        }
+        
+        function switchTab(tabId) {
+            // Deactivate all tabs and contents
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Activate selected tab and content
+            document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        }
+        
+        function toggleAutomation() {
+            state.automationActive = automationToggle.checked;
+            
+            if (state.automationActive) {
+                automationStatus.textContent = 'Status: Active';
+                startAutomation();
+                logActivity('Automation started');
+            } else {
+                automationStatus.textContent = 'Status: Inactive';
+                stopAutomation();
+                logActivity('Automation stopped');
+            }
+            
+            saveSettings();
+        }
+        
+        function startAutomation() {
+            // Process immediately
+            processHallTickets();
+            
+            // Then set up interval for every 10 minutes
+            state.intervalId = setInterval(processHallTickets, 10 * 60 * 1000);
+        }
+        
+        function stopAutomation() {
+            if (state.intervalId) {
+                clearInterval(state.intervalId);
+                state.intervalId = null;
+            }
+        }
+        
+        function processHallTickets() {
+            logActivity('Processing hall tickets...');
+            
+            // In a real implementation, this would:
+            // 1. Connect to Google Sheets and retrieve student data
+            // 2. Filter students with clearance=true and hallTicketIssued=false
+            // 3. For each student, search for hall ticket in Google Drive
+            // 4. If found, send email with attachment
+            // 5. Update Google Sheet to mark hall ticket as issued
+            
+            // Simulate processing
             setTimeout(() => {
-                showApiStatus(`Email sent to faculty with subject assignments`, 'success');
+                const processedCount = Math.floor(Math.random() * 5) + 1;
+                logActivity(`Processed ${processedCount} hall tickets`);
+                updateDashboardStats();
             }, 2000);
         }
-
-        // Save Drive configuration
-        function saveDriveConfig() {
-            const department = document.getElementById('ticketDept').value;
-            const folderId = document.getElementById('driveFolderId').value;
-            
-            if (!department || !folderId) {
-                showApiStatus('Please select department and enter folder ID', 'error');
-                return;
-            }
-            
-            driveConfig[department] = folderId;
-            
-            // Save to configuration
-            const config = JSON.parse(localStorage.getItem('hailTicketConfig')) || {};
-            config.driveConfig = driveConfig;
-            localStorage.setItem('hailTicketConfig', JSON.stringify(config));
-            
-            showApiStatus(`Drive folder configured for ${department} department`, 'success');
+        
+        function updateDashboardStats() {
+            // In a real implementation, these would be calculated from actual data
+            document.getElementById('total-students').textContent = '150';
+            document.getElementById('cleared-students').textContent = '120';
+            document.getElementById('issued-tickets').textContent = '115';
+            document.getElementById('pending-tickets').textContent = '5';
         }
-
-        // Issue tickets
-        function issueTickets() {
-            const department = document.getElementById('issueDept').value;
+        
+        function logActivity(message) {
+            const activityLog = document.getElementById('activity-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('p');
+            logEntry.innerHTML = `<strong>${timestamp}:</strong> ${message}`;
             
-            if (!department) {
-                showApiStatus('Please select a department', 'error');
-                return;
+            // Add to top of log
+            if (activityLog.firstChild) {
+                activityLog.insertBefore(logEntry, activityLog.firstChild);
+            } else {
+                activityLog.appendChild(logEntry);
             }
             
-            if (!driveConfig[department]) {
-                showApiStatus(`No Drive folder configured for ${department} department`, 'error');
-                return;
+            // Limit to 10 entries
+            if (activityLog.children.length > 10) {
+                activityLog.removeChild(activityLog.lastChild);
             }
+        }
+        
+        function saveSheetsSettings() {
+            const sheetUrl = document.getElementById('sheet-url').value;
+            const sheetId = document.getElementById('sheet-id').value;
             
-            // Filter students who need tickets
-            const eligibleStudents = masterData.filter(student => 
-                student.Department === department && 
-                student.Clearance_Status === 'Cleared' && 
-                student.Hail_Ticket_Status !== 'Issued'
-            );
+            state.settings.sheets = {
+                url: sheetUrl,
+                id: sheetId
+            };
             
-            if (eligibleStudents.length === 0) {
-                showApiStatus(`No eligible students found in ${department} department`, 'info');
-                return;
-            }
+            const statusDiv = document.getElementById('sheets-status');
+            statusDiv.textContent = 'Google Sheets settings saved successfully!';
+            statusDiv.className = 'alert alert-success';
+            statusDiv.classList.remove('hidden');
             
-            showApiStatus(`Issuing tickets to ${eligibleStudents.length} students in ${department} department...`, 'info');
+            saveSettings();
             
-            // Simulate ticket issuance process
             setTimeout(() => {
-                // Update issuance log
-                const logTable = document.getElementById('issuanceLogTable');
-                const now = new Date().toLocaleString();
-                
-                logTable.innerHTML = `
-                    <tr>
-                        <td>${now}</td>
-                        <td>${department}</td>
-                        <td>${eligibleStudents.length}</td>
-                        <td><span class="badge bg-success">Completed</span></td>
-                    </tr>
-                    ${logTable.innerHTML}
-                `;
-                
-                showApiStatus(`Tickets issued successfully to ${eligibleStudents.length} students`, 'success');
+                statusDiv.classList.add('hidden');
             }, 3000);
         }
-
-        // Initialize event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Section navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                    
-                    this.classList.add('active');
-                    const sectionId = this.getAttribute('data-section');
-                    document.getElementById(sectionId).classList.add('active');
-                });
+        
+        function saveDriveSettings() {
+            const driveFolder = document.getElementById('drive-folder').value;
+            
+            state.settings.drive = {
+                folderId: driveFolder
+            };
+            
+            const statusDiv = document.getElementById('drive-status');
+            statusDiv.textContent = 'Google Drive settings saved successfully!';
+            statusDiv.className = 'alert alert-success';
+            statusDiv.classList.remove('hidden');
+            
+            saveSettings();
+            
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+            }, 3000);
+        }
+        
+        function saveEmailSettings() {
+            const adminEmail = document.getElementById('admin-email').value;
+            const emailSubject = document.getElementById('email-subject').value;
+            const emailBody = document.getElementById('email-body').value;
+            
+            state.settings.email = {
+                adminEmail: adminEmail,
+                subject: emailSubject,
+                body: emailBody
+            };
+            
+            const statusDiv = document.getElementById('email-status');
+            statusDiv.textContent = 'Email settings saved successfully!';
+            statusDiv.className = 'alert alert-success';
+            statusDiv.classList.remove('hidden');
+            
+            saveSettings();
+            
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+            }, 3000);
+        }
+        
+        function addDepartment() {
+            const deptName = document.getElementById('dept-name').value;
+            const deptSheet = document.getElementById('dept-sheet').value;
+            
+            if (!deptName || !deptSheet) {
+                alert('Please enter both department name and sheet URL');
+                return;
+            }
+            
+            state.departments.push({
+                name: deptName,
+                sheetUrl: deptSheet
             });
             
-            // Form submissions
-            document.getElementById('addFacultyForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // In a real implementation, this would add faculty to Google Sheets
-                showApiStatus('Faculty added successfully', 'success');
-                this.reset();
-            });
+            updateDepartmentTable();
+            updateDepartmentFilters();
             
-            document.getElementById('emailSettingsForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (saveConfig()) {
-                    showApiStatus('Email settings saved successfully', 'success');
+            // Clear form
+            document.getElementById('dept-name').value = '';
+            document.getElementById('dept-sheet').value = '';
+            
+            saveSettings();
+        }
+        
+        function updateDepartmentTable() {
+            const deptTable = document.getElementById('dept-table').getElementsByTagName('tbody')[0];
+            deptTable.innerHTML = '';
+            
+            state.departments.forEach((dept, index) => {
+                const row = deptTable.insertRow();
+                row.insertCell(0).textContent = dept.name;
+                row.insertCell(1).textContent = dept.sheetUrl;
+                
+                const actionsCell = row.insertCell(2);
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.className = 'btn-danger';
+                deleteBtn.addEventListener('click', () => deleteDepartment(index));
+                actionsCell.appendChild(deleteBtn);
+            });
+        }
+        
+        function updateDepartmentFilters() {
+            const deptFilter = document.getElementById('dept-filter');
+            
+            // Clear existing options except "All"
+            while (deptFilter.children.length > 1) {
+                deptFilter.removeChild(deptFilter.lastChild);
+            }
+            
+            // Add departments
+            state.departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.name;
+                option.textContent = dept.name;
+                deptFilter.appendChild(option);
+            });
+        }
+        
+        function deleteDepartment(index) {
+            state.departments.splice(index, 1);
+            updateDepartmentTable();
+            updateDepartmentFilters();
+            saveSettings();
+        }
+        
+        function searchStudent() {
+            const prn = document.getElementById('search-prn').value;
+            // In a real implementation, this would search for the student by PRN
+            alert(`Searching for student with PRN: ${prn}`);
+        }
+        
+        function loadStudentData() {
+            // In a real implementation, this would load student data from Google Sheets
+            // For demo purposes, we'll create sample data
+            const studentTable = document.getElementById('student-table').getElementsByTagName('tbody')[0];
+            studentTable.innerHTML = '';
+            
+            const sampleData = [
+                { prn: 'PRN001', name: 'John Doe', department: 'Computer', year: '2', clearance: 'Cleared', ticket: 'Issued' },
+                { prn: 'PRN002', name: 'Jane Smith', department: 'Computer', year: '3', clearance: 'Cleared', ticket: 'Pending' },
+                { prn: 'PRN003', name: 'Robert Johnson', department: 'IT', year: '4', clearance: 'Not Cleared', ticket: 'Not Issued' },
+                { prn: 'PRN004', name: 'Emily Davis', department: 'Computer', year: '2', clearance: 'Cleared', ticket: 'Issued' },
+                { prn: 'PRN005', name: 'Michael Wilson', department: 'IT', year: '3', clearance: 'Cleared', ticket: 'Issued' }
+            ];
+            
+            sampleData.forEach(student => {
+                const row = studentTable.insertRow();
+                row.insertCell(0).textContent = student.prn;
+                row.insertCell(1).textContent = student.name;
+                row.insertCell(2).textContent = student.department;
+                row.insertCell(3).textContent = student.year;
+                
+                const clearanceCell = row.insertCell(4);
+                clearanceCell.textContent = student.clearance;
+                if (student.clearance === 'Cleared') {
+                    clearanceCell.innerHTML = '<span class="status-indicator status-active"></span> Cleared';
+                } else {
+                    clearanceCell.innerHTML = '<span class="status-indicator status-inactive"></span> Not Cleared';
+                }
+                
+                const ticketCell = row.insertCell(5);
+                ticketCell.textContent = student.ticket;
+                if (student.ticket === 'Issued') {
+                    ticketCell.innerHTML = '<span class="status-indicator status-active"></span> Issued';
+                } else {
+                    ticketCell.innerHTML = '<span class="status-indicator status-inactive"></span> ' + student.ticket;
                 }
             });
-            
-            document.getElementById('adminSettingsForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (saveConfig()) {
-                    showApiStatus('Admin settings saved successfully', 'success');
+        }
+        
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('hallTicketSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                state.settings = settings.settings || {};
+                state.departments = settings.departments || [];
+                state.automationActive = settings.automationActive || false;
+                
+                // Update UI
+                automationToggle.checked = state.automationActive;
+                automationStatus.textContent = state.automationActive ? 'Status: Active' : 'Status: Inactive';
+                
+                if (state.automationActive) {
+                    startAutomation();
                 }
-            });
+            }
+        }
+        
+        function loadSettingsToForm() {
+            // Sheets settings
+            document.getElementById('sheet-url').value = state.settings.sheets.url || '';
+            document.getElementById('sheet-id').value = state.settings.sheets.id || '';
             
-            // Department change event for faculty selection
-            document.getElementById('subjectDept').addEventListener('change', function() {
-                const department = this.value;
-                const facultySelect = document.getElementById('subjectFaculty');
-                
-                facultySelect.innerHTML = '<option value="">Select Faculty</option>';
-                
-                if (department) {
-                    const departmentFaculty = facultyData.filter(f => f.Department === department);
-                    
-                    departmentFaculty.forEach(faculty => {
-                        facultySelect.innerHTML += `<option value="${faculty.Email}">${faculty.Name} (${faculty.Designation})</option>`;
+            // Drive settings
+            document.getElementById('drive-folder').value = state.settings.drive.folderId || '';
+            
+            // Email settings
+            document.getElementById('admin-email').value = state.settings.email.adminEmail || '';
+            document.getElementById('email-subject').value = state.settings.email.subject || 'Hall Ticket Issuance';
+            document.getElementById('email-body').value = state.settings.email.body || 'Dear Student, Your hall ticket is attached. Please find it attached to this email.';
+        }
+        
+        function saveSettings() {
+            const settingsToSave = {
+                settings: state.settings,
+                departments: state.departments,
+                automationActive: state.automationActive
+            };
+            
+            localStorage.setItem('hallTicketSettings', JSON.stringify(settingsToSave));
+        }
+        
+        // Google Apps Script integration guidance
+        // This would be implemented in a separate Google Apps Script project
+        /*
+        function connectToGoogleServices() {
+            // Google Sheets API integration
+            // 1. Enable Google Sheets API in Google Cloud Console
+            // 2. Create credentials (OAuth 2.0 client ID)
+            // 3. Use the following pattern to access sheets:
+            
+            function getSheetData(sheetId, range) {
+                return new Promise((resolve, reject) => {
+                    gapi.client.sheets.spreadsheets.values.get({
+                        spreadsheetId: sheetId,
+                        range: range
+                    }).then(response => {
+                        resolve(response.result.values);
+                    }, error => {
+                        reject(error);
                     });
-                }
-            });
-        });
+                });
+            }
+            
+            // Google Drive API integration
+            // 1. Enable Google Drive API in Google Cloud Console
+            // 2. Use the following pattern to search for files:
+            
+            function searchFileInDrive(fileName, folderId) {
+                return new Promise((resolve, reject) => {
+                    gapi.client.drive.files.list({
+                        q: `name='${fileName}' and '${folderId}' in parents and trashed=false`,
+                        fields: 'files(id, name)'
+                    }).then(response => {
+                        resolve(response.result.files);
+                    }, error => {
+                        reject(error);
+                    });
+                });
+            }
+            
+            // Gmail API integration
+            // 1. Enable Gmail API in Google Cloud Console
+            // 2. Use the following pattern to send emails:
+            
+            function sendEmailWithAttachment(to, subject, body, attachmentId) {
+                const boundary = 'boundary_' + Math.random().toString(36).substring(2);
+                
+                // Create email with attachment
+                const email = [
+                    `To: ${to}`,
+                    `Subject: ${subject}`,
+                    'MIME-Version: 1.0',
+                    `Content-Type: multipart/mixed; boundary="${boundary}"`,
+                    '',
+                    `--${boundary}`,
+                    'Content-Type: text/plain; charset="UTF-8"',
+                    '',
+                    body,
+                    `--${boundary}`,
+                    'Content-Type: application/pdf',
+                    'Content-Transfer-Encoding: base64',
+                    `Content-Disposition: attachment; filename="hall_ticket.pdf"`,
+                    '',
+                    // Attachment content would go here
+                    `--${boundary}--`
+                ].join('\r\n');
+                
+                const base64EncodedEmail = btoa(email).replace(/\+/g, '-').replace(/\//g, '_');
+                
+                return gapi.client.gmail.users.messages.send({
+                    userId: 'me',
+                    resource: {
+                        raw: base64EncodedEmail
+                    }
+                });
+            }
+        }
+        */
     </script>
 </body>
 </html>
